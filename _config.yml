@@ -1,0 +1,35 @@
+# Jekyll Configuration for Resume Website
+# This ensures proper handling of subdirectory deployments for preview branches
+
+# Basic settings
+title: "Professional Resumes"
+description: "Professional resumes and CVs showcase"
+author: "Prafful Jagtap"
+
+# URL settings - can be overridden by environment variables
+url: "https://praff-projects.github.io"
+baseurl: "/resumes"  # Default baseurl, can be overridden by JEKYLL_BASEURL env var
+
+# Build settings
+markdown: kramdown
+
+# File processing
+include:
+  - .htaccess
+  - _pages
+exclude:
+  - node_modules
+  - .git
+  - .gitignore
+  - README.md
+  - Gemfile*
+  - vendor
+  - .bundle
+  - .sass-cache
+  - _site
+  - test-preview.html
+
+# Markdown processing
+kramdown:
+  input: GFM
+  hard_wrap: false

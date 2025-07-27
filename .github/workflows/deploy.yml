@@ -92,11 +92,19 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
+      - name: Create Jekyll config override for baseurl
+        run: |
+          echo "baseurl: ${{ needs.config.outputs.base_url }}" > _config_override.yml
+          echo "url: https://praff-projects.github.io" >> _config_override.yml
+          cat _config_override.yml
+      
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./
           destination: ./_site
+          # Pass baseurl as Jekyll config override
+          config: './_config.yml,_config_override.yml'
         env:
           JEKYLL_ENV: ${{ needs.config.outputs.is_production == 'true' && 'production' || 'development' }}
       
