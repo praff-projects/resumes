@@ -49,9 +49,15 @@ function displayResume(resume) {
     
     // Update languages section
     updateLanguages(resume);
+    
+    // Update sidebar sections
+    updateSidebarEducation(resume);
+    updateSidebarLanguages(resume);
+    updatePersonalSkills(resume);
 }
 
 function updateHeader(resume) {
+    // Update original header elements (for backward compatibility)
     const nameEl = document.querySelector('.name');
     const titleEl = document.querySelector('.title');
     const locationEl = document.querySelector('.location');
@@ -60,7 +66,14 @@ function updateHeader(resume) {
     if (titleEl) titleEl.textContent = resume.title;
     if (locationEl) locationEl.textContent = resume.location;
 
-    // Update contact information
+    // Update new content header elements
+    const contentNameEl = document.querySelector('.content-name');
+    const contentTitleEl = document.querySelector('.content-title');
+    
+    if (contentNameEl) contentNameEl.textContent = resume.name;
+    if (contentTitleEl) contentTitleEl.textContent = resume.title;
+
+    // Update contact information in header
     const contactInfo = document.querySelector('.contact-info');
     if (contactInfo && resume.contact) {
         contactInfo.innerHTML = `
@@ -80,6 +93,33 @@ function updateHeader(resume) {
                 <span class="contact-label">Portfolio:</span>
                 <a href="${resume.contact.portfolio}" target="_blank">${resume.contact.portfolio.replace('https://', '')}</a>
             </div>
+        `;
+    }
+
+    // Update sidebar contact information
+    const sidebarContactInfo = document.querySelector('.contact-info-sidebar');
+    if (sidebarContactInfo && resume.contact) {
+        sidebarContactInfo.innerHTML = `
+            <div class="sidebar-contact-item">
+                <span class="contact-icon">📧</span>
+                <a href="mailto:${resume.contact.email}">${resume.contact.email}</a>
+            </div>
+            <div class="sidebar-contact-item">
+                <span class="contact-icon">📱</span>
+                <span>${resume.contact.phone}</span>
+            </div>
+            <div class="sidebar-contact-item">
+                <span class="contact-icon">💼</span>
+                <a href="${resume.contact.linkedin}" target="_blank">LinkedIn Profile</a>
+            </div>
+            <div class="sidebar-contact-item">
+                <span class="contact-icon">🌐</span>
+                <a href="${resume.contact.portfolio}" target="_blank">Portfolio</a>
+            </div>
+            ${resume.location ? `<div class="sidebar-contact-item">
+                <span class="contact-icon">📍</span>
+                <span>${resume.location}</span>
+            </div>` : ''}
         `;
     }
 }
@@ -265,6 +305,48 @@ function displayErrorMessage() {
             <a href="../../" class="btn btn-primary">← Back to Resume List</a>
         </div>
     `;
+}
+
+function updateSidebarEducation(resume) {
+    const sidebarEducationItems = document.querySelector('.education-section .education-items');
+    if (!sidebarEducationItems || !resume.education) return;
+
+    sidebarEducationItems.innerHTML = '';
+
+    resume.education.forEach(edu => {
+        const eduDiv = document.createElement('div');
+        eduDiv.className = 'sidebar-education-item';
+        
+        eduDiv.innerHTML = `
+            <div class="sidebar-degree">${edu.degree}</div>
+            ${edu.specialization ? `<div class="sidebar-specialization">${edu.specialization}</div>` : ''}
+            <div class="sidebar-institution">${edu.institution}</div>
+            <div class="sidebar-year">${edu.year_completed}</div>
+        `;
+        
+        sidebarEducationItems.appendChild(eduDiv);
+    });
+}
+
+function updateSidebarLanguages(resume) {
+    const sidebarLanguageList = document.querySelector('.languages-section .language-list');
+    if (!sidebarLanguageList || !resume.languages) return;
+
+    sidebarLanguageList.innerHTML = resume.languages.map(lang => 
+        `<div class="sidebar-language">${lang}</div>`
+    ).join('');
+}
+
+function updatePersonalSkills(resume) {
+    const personalSkillsList = document.querySelector('.personal-skills-list');
+    if (!personalSkillsList || !resume.skills) return;
+
+    // Create a list of personal/soft skills - for now using approach skills
+    const personalSkills = resume.skills.approach || [];
+    
+    personalSkillsList.innerHTML = personalSkills.map(skill => 
+        `<div class="sidebar-skill">${skill}</div>`
+    ).join('');
 }
 
 // Load resume when page loads
