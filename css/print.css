@@ -1,0 +1,329 @@
+/* Print-specific styles */
+@media print {
+    /* Hide elements that shouldn't be printed */
+    .no-print,
+    .resume-nav,
+    .resume-footer,
+    .site-footer {
+        display: none !important;
+    }
+    
+    /* Reset page styles for printing */
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt;
+        line-height: 1.4;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container {
+        max-width: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    /* Page breaks */
+    .resume-section {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 20pt;
+        background: white !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+    }
+    
+    .job {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 15pt;
+        padding-bottom: 10pt;
+    }
+    
+    /* Header styling for print */
+    .resume-header {
+        background: white !important;
+        color: black !important;
+        padding: 0 !important;
+        margin-bottom: 20pt;
+        border-bottom: 2pt solid #000;
+        padding-bottom: 10pt !important;
+    }
+    
+    .header-content {
+        display: block !important;
+    }
+    
+    .personal-info .name {
+        color: black !important;
+        font-size: 18pt;
+        margin-bottom: 5pt;
+    }
+    
+    .personal-info .title {
+        color: #333 !important;
+        font-size: 14pt;
+        margin-bottom: 5pt;
+    }
+    
+    .personal-info .location {
+        color: #666 !important;
+        font-size: 11pt;
+        margin-bottom: 10pt;
+    }
+    
+    .contact-info {
+        margin-top: 10pt;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        gap: 15pt;
+    }
+    
+    .contact-item {
+        display: inline-flex !important;
+        flex-direction: row !important;
+        gap: 5pt;
+        align-items: baseline;
+    }
+    
+    .contact-label {
+        color: #333 !important;
+        font-weight: bold;
+    }
+    
+    .contact-info a {
+        color: #333 !important;
+        text-decoration: none;
+    }
+    
+    /* Main content */
+    .resume-main {
+        padding: 0 !important;
+    }
+    
+    /* Section headers */
+    h3 {
+        font-size: 14pt;
+        margin-bottom: 8pt;
+        margin-top: 15pt;
+        border-bottom: 1pt solid #333;
+        padding-bottom: 3pt;
+        color: black !important;
+    }
+    
+    h4 {
+        font-size: 12pt;
+        margin-bottom: 3pt;
+        color: black !important;
+    }
+    
+    h5 {
+        font-size: 11pt;
+        margin-bottom: 3pt;
+        color: #333 !important;
+    }
+    
+    /* Job styling */
+    .job-header {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 8pt;
+    }
+    
+    .job-title {
+        font-size: 12pt;
+        color: black !important;
+        margin-bottom: 2pt;
+    }
+    
+    .company {
+        font-size: 11pt;
+        color: #333 !important;
+        font-weight: normal;
+    }
+    
+    .job-details {
+        text-align: right;
+        font-size: 10pt;
+        color: #666 !important;
+    }
+    
+    .job-content {
+        display: block !important;
+    }
+    
+    .responsibilities,
+    .achievements {
+        margin-bottom: 8pt;
+    }
+    
+    .responsibilities ul,
+    .achievements ul {
+        margin-top: 3pt;
+        padding-left: 15pt;
+    }
+    
+    .responsibilities li,
+    .achievements li {
+        margin-bottom: 3pt;
+        font-size: 10pt;
+        line-height: 1.3;
+    }
+    
+    /* Skills styling */
+    .skills-grid {
+        display: block !important;
+    }
+    
+    .skill-category {
+        margin-bottom: 8pt;
+    }
+    
+    .skill-category h4 {
+        font-size: 11pt;
+        margin-bottom: 3pt;
+        border-bottom: none;
+        color: black !important;
+    }
+    
+    .skill-tags {
+        display: block !important;
+        line-height: 1.4;
+    }
+    
+    .skill-tag {
+        display: inline;
+        background: none !important;
+        color: black !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        font-size: 10pt;
+    }
+    
+    .skill-tag:not(:last-child):after {
+        content: ', ';
+    }
+    
+    /* Education styling */
+    .education-items {
+        display: block !important;
+    }
+    
+    .education-item {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 8pt;
+        padding: 0 !important;
+        background: none !important;
+        border-radius: 0 !important;
+    }
+    
+    .education-item .year {
+        font-size: 11pt;
+        color: black !important;
+    }
+    
+    .specialization {
+        color: #333 !important;
+        font-style: italic;
+    }
+    
+    .institution {
+        color: black !important;
+        font-size: 10pt;
+    }
+    
+    .education-item .location {
+        color: #666 !important;
+        font-size: 9pt;
+    }
+    
+    /* Certifications */
+    .certification-item {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5pt;
+        padding: 0 !important;
+        background: none !important;
+        border-radius: 0 !important;
+    }
+    
+    .certification-item .year {
+        color: black !important;
+        font-size: 11pt;
+    }
+    
+    /* Projects */
+    .project {
+        margin-bottom: 8pt;
+        padding: 0 !important;
+        background: none !important;
+        border-radius: 0 !important;
+    }
+    
+    .project-description {
+        font-size: 10pt;
+        margin-bottom: 5pt;
+    }
+    
+    .tech-stack {
+        display: block !important;
+        line-height: 1.4;
+    }
+    
+    .tech-tag {
+        display: inline;
+        background: none !important;
+        color: black !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        font-size: 9pt;
+    }
+    
+    .tech-tag:not(:last-child):after {
+        content: ', ';
+    }
+    
+    /* Languages */
+    .language-list {
+        display: block !important;
+        line-height: 1.4;
+    }
+    
+    .language {
+        display: inline;
+        background: none !important;
+        color: black !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        font-size: 10pt;
+    }
+    
+    .language:not(:last-child):after {
+        content: ', ';
+    }
+    
+    /* Spacing adjustments */
+    .profile-summary p {
+        font-size: 10pt;
+        line-height: 1.4;
+        margin-bottom: 8pt;
+    }
+    
+    /* Ensure proper margins */
+    p {
+        margin-bottom: 5pt;
+    }
+    
+    /* Links */
+    a {
+        color: black !important;
+        text-decoration: none;
+    }
+}

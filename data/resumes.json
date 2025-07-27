@@ -1,0 +1,13 @@
+{
+  "resumes": [
+    {
+      "id": "prafful-jagtap",
+      "name": "Prafful Jagtap",
+      "title": "Senior Software Engineer | Full‑Stack & Product Engineer",
+      "location": "Sydney, Australia",
+      "summary": "Senior Software Engineer with 4+ years of experience in Australia delivering high‑impact fintech and health‑tech solutions. Specializes in TypeScript, React Native, Node.js, and event‑driven architectures.",
+      "featured_skills": ["TypeScript", "React Native", "Node.js", "AWS"],
+      "url": "resumes/prafful-jagtap/"
+    }
+  ]
+}
