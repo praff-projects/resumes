@@ -1,16 +1,26 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Trigger on pushes to main branch
+  # Trigger on pushes to any branch
   push:
-    branches: [ main ]
+    branches: [ "**" ]
   
   # Trigger on pull requests to main branch for preview
   pull_request:
     branches: [ main ]
   
-  # Allow manual trigger
+  # Allow manual trigger with options
   workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'Deployment target'
+        required: false
+        default: 'auto'
+        type: choice
+        options:
+        - auto
+        - production
+        - preview
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -19,16 +29,62 @@ permissions:
   id-token: write
   pull-requests: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Allow concurrent deployments for previews, but not for production
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: ${{ github.ref == 'refs/heads/main' && 'pages-production' || format('pages-preview-{0}', github.ref) }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
+  # Configuration job to determine deployment settings
+  config:
+    runs-on: ubuntu-latest
+    outputs:
+      is_production: ${{ steps.config.outputs.is_production }}
+      is_preview: ${{ steps.config.outputs.is_preview }}
+      deploy_path: ${{ steps.config.outputs.deploy_path }}
+      base_url: ${{ steps.config.outputs.base_url }}
+      preview_url: ${{ steps.config.outputs.preview_url }}
+    steps:
+      - name: Determine deployment configuration
+        id: config
+        run: |
+          # Get branch name, handling different event types
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BRANCH_NAME="${{ github.head_ref }}"
+          else
+            BRANCH_NAME="${{ github.ref_name }}"
+          fi
+          
+          # Clean branch name for URL (replace special characters)
+          CLEAN_BRANCH=$(echo "$BRANCH_NAME" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+          
+          # Determine deployment target
+          DEPLOY_TARGET="${{ github.event.inputs.deploy_target || 'auto' }}"
+          
+          if [ "$DEPLOY_TARGET" = "production" ] || ([ "$DEPLOY_TARGET" = "auto" ] && [ "$BRANCH_NAME" = "main" ]); then
+            # Production deployment
+            echo "is_production=true" >> $GITHUB_OUTPUT
+            echo "is_preview=false" >> $GITHUB_OUTPUT
+            echo "deploy_path=/" >> $GITHUB_OUTPUT
+            echo "base_url=/resumes" >> $GITHUB_OUTPUT
+            echo "preview_url=https://praff-projects.github.io/resumes" >> $GITHUB_OUTPUT
+          else
+            # Preview deployment
+            echo "is_production=false" >> $GITHUB_OUTPUT
+            echo "is_preview=true" >> $GITHUB_OUTPUT
+            echo "deploy_path=/preview/$CLEAN_BRANCH" >> $GITHUB_OUTPUT
+            echo "base_url=/resumes/preview/$CLEAN_BRANCH" >> $GITHUB_OUTPUT
+            echo "preview_url=https://praff-projects.github.io/resumes/preview/$CLEAN_BRANCH" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "Branch: $BRANCH_NAME"
+          echo "Clean branch: $CLEAN_BRANCH"
+          echo "Deploy target: $DEPLOY_TARGET"
+
   # Build job
   build:
     runs-on: ubuntu-latest
+    needs: config
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,37 +97,168 @@ jobs:
         with:
           source: ./
           destination: ./_site
+        env:
+          JEKYLL_ENV: ${{ needs.config.outputs.is_production == 'true' && 'production' || 'development' }}
+      
+      - name: Prepare deployment structure
+        run: |
+          if [ "${{ needs.config.outputs.is_preview }}" = "true" ]; then
+            # For preview deployments, try to preserve existing content
+            echo "Preparing preview deployment..."
+            
+            # Try to download existing GitHub Pages content
+            echo "Checking for existing GitHub Pages content..."
+            if curl -s -f -L https://praff-projects.github.io/resumes/ > /dev/null 2>&1; then
+              echo "Existing content found, downloading..."
+              
+              # Create a temporary directory for existing content
+              mkdir -p ./_existing_site
+              cd ./_existing_site
+              
+              # Download the existing site using wget with proper options
+              wget -r -np -k -l 10 --no-check-certificate \
+                --reject="*.jpg,*.jpeg,*.gif,*.png,*.bmp,*.ico,*.svg,*.pdf,*.zip,*.tar,*.gz" \
+                --timeout=30 --tries=3 \
+                "https://praff-projects.github.io/resumes/" || echo "Some files failed to download, continuing..."
+              
+              cd ..
+              
+              # Create final site structure
+              mkdir -p ./_site_final
+              
+              # Copy existing content if it was downloaded successfully
+              if [ -d "./_existing_site/praff-projects.github.io/resumes" ]; then
+                echo "Copying existing content..."
+                cp -r ./_existing_site/praff-projects.github.io/resumes/* ./_site_final/ 2>/dev/null || echo "No existing content to copy"
+              fi
+            else
+              echo "No existing content found or not accessible"
+              mkdir -p ./_site_final
+            fi
+            
+            # Create the preview subdirectory and copy new content
+            echo "Adding preview content to ${{ needs.config.outputs.deploy_path }}"
+            mkdir -p "./_site_final${{ needs.config.outputs.deploy_path }}"
+            cp -r ./_site/* "./_site_final${{ needs.config.outputs.deploy_path }}/"
+            
+            # Create or update the preview index
+            mkdir -p ./_site_final/preview
+            cat > ./_site_final/preview/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Preview Branches - Professional Resumes</title>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                  body { 
+                      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                      padding: 2rem; 
+                      background: #f8f9fa;
+                      margin: 0;
+                  }
+                  .container { max-width: 800px; margin: 0 auto; }
+                  h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 1rem; }
+                  .preview-link { 
+                      display: block; margin: 1rem 0; padding: 1.5rem; 
+                      background: white; text-decoration: none; color: #2c3e50; 
+                      border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                      border-left: 4px solid #3498db;
+                      transition: all 0.3s ease;
+                  }
+                  .preview-link:hover { 
+                      background: #f8f9fa; 
+                      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+                      transform: translateY(-2px);
+                  }
+                  .back-link {
+                      background: #3498db !important;
+                      color: white !important;
+                      border-left: 4px solid #2980b9;
+                  }
+                  .back-link:hover {
+                      background: #2980b9 !important;
+                  }
+                  .description { color: #666; margin-top: 0.5rem; }
+                  .branch-name { font-family: monospace; background: #ecf0f1; padding: 0.2rem 0.5rem; border-radius: 3px; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>🚀 Preview Environment</h1>
+                  <p>This is the preview environment for branch deployments. Each feature branch gets its own preview URL for testing resume updates.</p>
+                  
+                  <a href="/resumes/" class="preview-link back-link">
+                      ← Back to Production Site
+                      <div class="description">Return to the main resume website</div>
+                  </a>
+                  
+                  <h2>Available Previews</h2>
+                  <p>Preview branches will be listed here as they are deployed. Each branch preview maintains the same functionality as the production site.</p>
+              </div>
+          </body>
+          </html>
+          EOF
+            
+            echo "Preview deployment structure prepared"
+            echo "Content will be available at: ${{ needs.config.outputs.preview_url }}"
+          else
+            # For production, use the site as-is (this will overwrite everything)
+            echo "Preparing production deployment..."
+            mv ./_site ./_site_final
+            echo "Production deployment will replace all content"
+          fi
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site_final
 
-  # Deployment job (only for main branch)
+  # Deployment job (unified for both production and preview)
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: needs.config.outputs.is_production == 'true' || needs.config.outputs.is_preview == 'true'
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ needs.config.outputs.preview_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: [config, build]
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
-  # Preview job (only for pull requests)
-  preview:
-    if: github.event_name == 'pull_request'
+  # Preview notification job (for pull requests and feature branches)
+  preview-notification:
+    if: github.event_name == 'pull_request' || needs.config.outputs.is_preview == 'true'
     runs-on: ubuntu-latest
-    needs: build
+    needs: [config, build, deploy]
     steps:
-      - name: Comment PR with preview
+      - name: Comment PR with preview link
+        if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const previewUrl = '${{ needs.config.outputs.preview_url }}';
+            const branchName = '${{ github.head_ref }}';
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🚀 **Preview Build Complete!**\n\nYour changes have been built successfully. Once this PR is merged to `main`, the site will be automatically deployed to GitHub Pages.\n\n📝 **Changes in this PR:**\n- Updated resume website\n- Ready for deployment\n\n*This is an automated preview comment.*'
+              body: `🚀 **Preview Build Complete!**
+            
+            Your changes have been deployed to a preview environment:
+            
+            🔗 **Preview URL**: ${previewUrl}
+            
+            📝 **Branch**: \`${branchName}\`
+            
+            The preview will be available for testing and review. Once this PR is merged to \`main\`, the changes will be automatically deployed to the production site.
+            
+            *This is an automated preview comment.*`
             })
+      
+      - name: Output preview URL for feature branches
+        if: github.event_name == 'push' && needs.config.outputs.is_preview == 'true'
+        run: |
+          echo "::notice title=Preview Deployed::Preview available at ${{ needs.config.outputs.preview_url }}"
