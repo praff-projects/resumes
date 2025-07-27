@@ -1,6 +1,18 @@
-// Individual resume page functionality
+/**
+ * Resume Page Functionality
+ * Handles loading and displaying individual resume data from JSON files
+ */
+
+/**
+ * Loads resume data from JSON file based on current URL path
+ * Extracts resume ID from URL and fetches corresponding JSON data
+ * Displays resume content or error message if loading fails
+ * @async
+ * @function loadResume
+ * @returns {Promise<void>} Promise that resolves when resume is loaded and displayed
+ */
 async function loadResume() {
-    // Extract resume ID from URL path
+    // Extract resume ID from URL path (e.g., /resumes/john-doe/ -> john-doe)
     const pathParts = window.location.pathname.split('/');
     const resumeId = pathParts[pathParts.length - 2] || pathParts[pathParts.length - 1];
     
@@ -22,42 +34,57 @@ async function loadResume() {
     }
 }
 
+/**
+ * Main function to display resume data by updating all page sections
+ * Coordinates the rendering of all resume sections and components
+ * @param {Object} resume - Resume data object containing all sections
+ * @param {string} resume.name - Full name of the person
+ * @param {string} resume.title - Job title/professional title
+ * @param {string} resume.location - Geographic location
+ * @param {Object} resume.contact - Contact information
+ * @param {string} resume.profile_summary - Professional summary text
+ * @param {Array} resume.experience - Array of work experience objects
+ * @param {Object} resume.skills - Skills organized by category
+ * @param {Array} resume.education - Educational background
+ * @param {Array} resume.certifications - Professional certifications
+ * @param {Array} resume.projects - Notable projects
+ * @param {Array} resume.languages - Spoken languages
+ */
 function displayResume(resume) {
-    // Update page title
+    // Update page title for SEO and browser tab
     document.title = `${resume.name} - ${resume.title.split('|')[0].trim()} Resume`;
 
-    // Update header information
+    // Update all page sections with resume data
     updateHeader(resume);
-    
-    // Update profile summary
     updateProfileSummary(resume);
-    
-    // Update experience section
     updateExperience(resume);
-    
-    // Update skills section
     updateSkills(resume);
-    
-    // Update education section
     updateEducation(resume);
-    
-    // Update certifications section
     updateCertifications(resume);
-    
-    // Update projects section
     updateProjects(resume);
-    
-    // Update languages section
     updateLanguages(resume);
     
-    // Update sidebar sections
+    // Update sidebar sections for modern two-column layout
     updateSidebarEducation(resume);
     updateSidebarLanguages(resume);
     updatePersonalSkills(resume);
 }
 
+/**
+ * Updates header sections with personal information and contact details
+ * Handles both the traditional header and the modern two-column layout headers
+ * @param {Object} resume - Resume data object
+ * @param {string} resume.name - Full name
+ * @param {string} resume.title - Professional title
+ * @param {string} resume.location - Geographic location
+ * @param {Object} resume.contact - Contact information object
+ * @param {string} resume.contact.email - Email address
+ * @param {string} resume.contact.phone - Phone number
+ * @param {string} resume.contact.linkedin - LinkedIn profile URL
+ * @param {string} resume.contact.portfolio - Portfolio website URL
+ */
 function updateHeader(resume) {
-    // Update original header elements (for backward compatibility)
+    // Update original header elements for backward compatibility
     const nameEl = document.querySelector('.name');
     const titleEl = document.querySelector('.title');
     const locationEl = document.querySelector('.location');
@@ -66,14 +93,37 @@ function updateHeader(resume) {
     if (titleEl) titleEl.textContent = resume.title;
     if (locationEl) locationEl.textContent = resume.location;
 
-    // Update new content header elements
+    // Update modern two-column layout header elements
     const contentNameEl = document.querySelector('.content-name');
     const contentTitleEl = document.querySelector('.content-title');
     
     if (contentNameEl) contentNameEl.textContent = resume.name;
     if (contentTitleEl) contentTitleEl.textContent = resume.title;
 
-    // Update contact information in header
+    // Update sidebar profile section with photo placeholder and basic info
+    const profilePhotoEl = document.getElementById('profile-photo');
+    const profileNameEl = document.getElementById('profile-name');
+    const profileTitleEl = document.getElementById('profile-title');
+    
+    if (profilePhotoEl) {
+        // Generate initials from full name (e.g., "John Doe" -> "JD")
+        const initials = resume.name.split(' ').map(word => word.charAt(0)).join('');
+        profilePhotoEl.textContent = initials;
+    }
+    if (profileNameEl) profileNameEl.textContent = resume.name;
+    if (profileTitleEl) profileTitleEl.textContent = resume.title;
+
+    // Update main header contact information
+    updateMainHeaderContact(resume);
+    
+    // Update sidebar contact information with enhanced styling
+    updateSidebarContact(resume);
+}
+/**
+ * Updates main header contact information section
+ * @param {Object} resume - Resume data with contact information
+ */
+function updateMainHeaderContact(resume) {
     const contactInfo = document.querySelector('.contact-info');
     if (contactInfo && resume.contact) {
         contactInfo.innerHTML = `
@@ -95,8 +145,13 @@ function updateHeader(resume) {
             </div>
         `;
     }
+}
 
-    // Update sidebar contact information
+/**
+ * Updates sidebar contact information with emoji icons and styling
+ * @param {Object} resume - Resume data with contact information
+ */
+function updateSidebarContact(resume) {
     const sidebarContactInfo = document.querySelector('.contact-info-sidebar');
     if (sidebarContactInfo && resume.contact) {
         sidebarContactInfo.innerHTML = `
@@ -124,6 +179,11 @@ function updateHeader(resume) {
     }
 }
 
+/**
+ * Updates the profile summary section with professional summary text
+ * @param {Object} resume - Resume data object
+ * @param {string} resume.profile_summary - Professional summary text
+ */
 function updateProfileSummary(resume) {
     const profileSection = document.querySelector('.profile-summary p');
     if (profileSection) {
@@ -131,15 +191,28 @@ function updateProfileSummary(resume) {
     }
 }
 
+/**
+ * Updates the professional experience section with job history
+ * Creates timeline-connected job entries with responsibilities and achievements
+ * @param {Object} resume - Resume data object
+ * @param {Array} resume.experience - Array of job experience objects
+ * @param {string} resume.experience[].role - Job title/role
+ * @param {string} resume.experience[].company - Company name
+ * @param {string} resume.experience[].location - Job location
+ * @param {string} resume.experience[].dates - Employment dates
+ * @param {Array} resume.experience[].responsibilities - List of key responsibilities
+ * @param {Array} resume.experience[].achievements - List of key achievements
+ */
 function updateExperience(resume) {
     const experienceSection = document.querySelector('.experience');
     if (!experienceSection || !resume.experience) return;
 
-    // Clear existing content except the heading
+    // Preserve the section heading and clear existing job entries
     const heading = experienceSection.querySelector('h3');
     experienceSection.innerHTML = '';
     experienceSection.appendChild(heading);
 
+    // Create job entries with timeline integration
     resume.experience.forEach(job => {
         const jobArticle = document.createElement('article');
         jobArticle.className = 'job';
@@ -175,46 +248,84 @@ function updateExperience(resume) {
     });
 }
 
+/**
+ * Updates the technical skills section with progress bars and categorized skills
+ * Creates skill categories with visual progress indicators for skill levels
+ * @param {Object} resume - Resume data object
+ * @param {Object} resume.skills - Skills object organized by categories
+ * @param {Array} resume.skills.languages_frameworks - Programming languages and frameworks
+ * @param {Array} resume.skills.backend_databases - Backend technologies and databases
+ * @param {Array} resume.skills.devops_tools - DevOps and development tools
+ * @param {Array} resume.skills.approach - Methodologies and approaches
+ */
 function updateSkills(resume) {
     const skillsGrid = document.querySelector('.skills-grid');
     if (!skillsGrid || !resume.skills) return;
 
+    // Define skill proficiency levels for visual variety and realism
+    const skillLevels = ['Expert', 'Advanced', 'Proficient', 'Intermediate', 'Advanced', 'Expert', 'Proficient'];
+
+    /**
+     * Helper function to create skill HTML with progress bars
+     * @param {Array} skills - Array of skill names
+     * @param {number} categoryIndex - Category index for level variation
+     * @returns {string} HTML string for skill tags with progress bars
+     */
+    function createSkillHTML(skills, categoryIndex = 0) {
+        return skills.map((skill, index) => {
+            const levelIndex = (categoryIndex * 10 + index) % skillLevels.length;
+            const level = skillLevels[levelIndex];
+            return `<div class="skill-tag">
+                <div class="skill-name">
+                    <span>${skill}</span>
+                    <span class="skill-level">${level}</span>
+                </div>
+                <div class="skill-progress">
+                    <div class="skill-progress-bar"></div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    // Render skills grid with categorized skill sections
     skillsGrid.innerHTML = `
         <div class="skill-category">
             <h4>Languages & Frameworks</h4>
             <div class="skill-tags">
-                ${resume.skills.languages_frameworks.map(skill => 
-                    `<span class="skill-tag">${skill}</span>`
-                ).join('')}
+                ${createSkillHTML(resume.skills.languages_frameworks, 0)}
             </div>
         </div>
         <div class="skill-category">
             <h4>Backend & Databases</h4>
             <div class="skill-tags">
-                ${resume.skills.backend_databases.map(skill => 
-                    `<span class="skill-tag">${skill}</span>`
-                ).join('')}
+                ${createSkillHTML(resume.skills.backend_databases, 1)}
             </div>
         </div>
         <div class="skill-category">
             <h4>DevOps & Tools</h4>
             <div class="skill-tags">
-                ${resume.skills.devops_tools.map(skill => 
-                    `<span class="skill-tag">${skill}</span>`
-                ).join('')}
+                ${createSkillHTML(resume.skills.devops_tools, 2)}
             </div>
         </div>
         <div class="skill-category">
             <h4>Approach & Methodology</h4>
             <div class="skill-tags">
-                ${resume.skills.approach.map(skill => 
-                    `<span class="skill-tag">${skill}</span>`
-                ).join('')}
+                ${createSkillHTML(resume.skills.approach, 3)}
             </div>
         </div>
     `;
 }
 
+/**
+ * Updates the education section with academic background information
+ * @param {Object} resume - Resume data object
+ * @param {Array} resume.education - Array of education objects
+ * @param {string} resume.education[].degree - Degree name
+ * @param {string} resume.education[].specialization - Field of specialization (optional)
+ * @param {string} resume.education[].institution - Educational institution name
+ * @param {string} resume.education[].location - Institution location
+ * @param {string} resume.education[].year_completed - Year of completion
+ */
 function updateEducation(resume) {
     const educationItems = document.querySelector('.education-items');
     if (!educationItems || !resume.education) return;
@@ -239,6 +350,13 @@ function updateEducation(resume) {
     });
 }
 
+/**
+ * Updates the certifications section with professional credentials
+ * @param {Object} resume - Resume data object
+ * @param {Array} resume.certifications - Array of certification objects
+ * @param {string} resume.certifications[].name - Certification name
+ * @param {string} resume.certifications[].year_completed - Year obtained
+ */
 function updateCertifications(resume) {
     const certificationItems = document.querySelector('.certification-items');
     if (!certificationItems || !resume.certifications) return;
@@ -258,11 +376,19 @@ function updateCertifications(resume) {
     });
 }
 
+/**
+ * Updates the projects section with notable work and personal projects
+ * @param {Object} resume - Resume data object
+ * @param {Array} resume.projects - Array of project objects
+ * @param {string} resume.projects[].name - Project name
+ * @param {string} resume.projects[].description - Project description
+ * @param {Array} resume.projects[].tech_stack - Technologies used in the project
+ */
 function updateProjects(resume) {
     const projectsSection = document.querySelector('.projects');
     if (!projectsSection || !resume.projects) return;
 
-    // Clear existing content except the heading
+    // Preserve the section heading and clear existing project entries
     const heading = projectsSection.querySelector('h3');
     projectsSection.innerHTML = '';
     projectsSection.appendChild(heading);
@@ -285,6 +411,11 @@ function updateProjects(resume) {
     });
 }
 
+/**
+ * Updates the languages section with spoken languages
+ * @param {Object} resume - Resume data object
+ * @param {Array} resume.languages - Array of language strings
+ */
 function updateLanguages(resume) {
     const languageList = document.querySelector('.language-list');
     if (!languageList || !resume.languages) return;
@@ -294,6 +425,10 @@ function updateLanguages(resume) {
     ).join('');
 }
 
+/**
+ * Displays error message when resume data cannot be loaded
+ * Shows user-friendly error message with navigation back to resume list
+ */
 function displayErrorMessage() {
     const container = document.querySelector('.resume-main .container');
     if (!container) return;
@@ -307,6 +442,11 @@ function displayErrorMessage() {
     `;
 }
 
+/**
+ * Updates the sidebar education section with compact education display
+ * @param {Object} resume - Resume data object
+ * @param {Array} resume.education - Array of education objects
+ */
 function updateSidebarEducation(resume) {
     const sidebarEducationItems = document.querySelector('.education-section .education-items');
     if (!sidebarEducationItems || !resume.education) return;
@@ -328,6 +468,11 @@ function updateSidebarEducation(resume) {
     });
 }
 
+/**
+ * Updates the sidebar languages section with compact language tags
+ * @param {Object} resume - Resume data object
+ * @param {Array} resume.languages - Array of language strings
+ */
 function updateSidebarLanguages(resume) {
     const sidebarLanguageList = document.querySelector('.languages-section .language-list');
     if (!sidebarLanguageList || !resume.languages) return;
@@ -337,17 +482,33 @@ function updateSidebarLanguages(resume) {
     ).join('');
 }
 
+/**
+ * Updates the personal skills section in sidebar with soft skills and methodologies
+ * Combines predefined personal skills with approach skills from resume data
+ * @param {Object} resume - Resume data object
+ * @param {Object} resume.skills - Skills object
+ * @param {Array} resume.skills.approach - Array of methodology/approach skills
+ */
 function updatePersonalSkills(resume) {
     const personalSkillsList = document.querySelector('.personal-skills-list');
     if (!personalSkillsList || !resume.skills) return;
 
-    // Create a list of personal/soft skills - for now using approach skills
-    const personalSkills = resume.skills.approach || [];
+    // Combine predefined personal/soft skills with approach skills from resume data
+    const personalSkills = [
+        'TEAMWORK', 
+        'CREATIVE', 
+        'INNOVATIVE', 
+        'COMMUNICATION',
+        ...(resume.skills.approach || [])
+    ];
     
     personalSkillsList.innerHTML = personalSkills.map(skill => 
-        `<div class="sidebar-skill">${skill}</div>`
+        `<div class="sidebar-skill">${skill.toUpperCase()}</div>`
     ).join('');
 }
 
-// Load resume when page loads
+/**
+ * Initialize resume loading when DOM is fully loaded
+ * Entry point for the resume page functionality
+ */
 document.addEventListener('DOMContentLoaded', loadResume);
