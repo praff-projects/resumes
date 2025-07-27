@@ -1,4 +1,14 @@
-/* Reset and Base Styles */
+/**
+ * Modern Resume Template Styles
+ * A comprehensive CSS file for a professional two-column resume design
+ * Features: Vertical timeline, dark sidebar, progress bars, responsive design
+ * Author: Copilot AI Assistant
+ * Version: 2.0 - Modern Design Update
+ */
+
+/* =============================================================================
+   RESET AND BASE STYLES
+   ============================================================================= */
 * {
     margin: 0;
     padding: 0;
@@ -18,7 +28,9 @@ body {
     padding: 0 20px;
 }
 
-/* Typography */
+/* =============================================================================
+   TYPOGRAPHY SYSTEM
+   ============================================================================= */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     margin-bottom: 0.5em;
@@ -68,7 +80,9 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Buttons */
+/* =============================================================================
+   BUTTON COMPONENTS
+   ============================================================================= */
 .btn {
     display: inline-block;
     padding: 10px 20px;
@@ -270,7 +284,9 @@ a:hover {
     color: #e09645;
 }
 
-/* Two-Column Resume Layout with Central Timeline */
+/* =============================================================================
+   MODERN TWO-COLUMN RESUME LAYOUT WITH VERTICAL TIMELINE
+   ============================================================================= */
 .resume-layout {
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -280,7 +296,10 @@ a:hover {
     position: relative;
 }
 
-/* Central Vertical Timeline */
+/* =============================================================================
+   CENTRAL VERTICAL TIMELINE
+   Creates the prominent orange timeline running down the center
+   ============================================================================= */
 .resume-layout::before {
     content: '';
     position: absolute;
@@ -293,7 +312,10 @@ a:hover {
     box-shadow: 0 0 8px rgba(244, 162, 97, 0.3);
 }
 
-/* Left Sidebar */
+/* =============================================================================
+   LEFT SIDEBAR - DARK THEME SECTION
+   Contains profile, contact, skills, languages, and education
+   ============================================================================= */
 .resume-sidebar {
     background: #2F2F2F;
     color: white;
@@ -470,7 +492,10 @@ a:hover {
     font-size: 1rem;
 }
 
-/* Right Main Content */
+/* =============================================================================
+   RIGHT MAIN CONTENT AREA - LIGHT THEME
+   Contains professional experience, skills, education, certifications, projects
+   ============================================================================= */
 .resume-content {
     background: white;
     padding: 40px 30px 40px 50px;
@@ -614,7 +639,10 @@ a:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Experience Section with Timeline Integration */
+/* =============================================================================
+   EXPERIENCE SECTION WITH TIMELINE INTEGRATION
+   Job entries connect to the central timeline with orange dots
+   ============================================================================= */
 .job {
     margin-bottom: 40px;
     padding-bottom: 30px;
@@ -729,7 +757,10 @@ a:hover {
     font-size: 1.1rem;
 }
 
-/* Skills Section with Progress Bars */
+/* =============================================================================
+   SKILLS SECTION WITH PROGRESS BARS
+   Visual skill indicators with orange progress bars and proficiency levels
+   ============================================================================= */
 .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -951,7 +982,10 @@ a:hover {
     gap: 10px;
 }
 
-/* Responsive Design */
+/* =============================================================================
+   RESPONSIVE DESIGN - MOBILE FIRST APPROACH
+   Adapts two-column layout to single column on smaller screens
+   ============================================================================= */
 @media (max-width: 768px) {
     .container {
         padding: 0 15px;
