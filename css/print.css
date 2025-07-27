@@ -30,6 +30,10 @@
         grid-template-columns: none !important;
     }
     
+    .resume-layout::before {
+        display: none !important;
+    }
+    
     .resume-sidebar {
         background: white !important;
         color: black !important;
@@ -39,9 +43,41 @@
         padding-bottom: 15pt !important;
     }
     
+    .profile-section {
+        display: flex !important;
+        align-items: center;
+        gap: 15pt;
+        margin-bottom: 15pt;
+        text-align: left !important;
+        border-bottom: 1pt solid #ccc;
+        padding-bottom: 10pt;
+    }
+    
+    .profile-photo {
+        width: 40pt !important;
+        height: 40pt !important;
+        font-size: 12pt !important;
+        background: #f0f0f0 !important;
+        color: black !important;
+        border: 1pt solid #333 !important;
+        flex-shrink: 0;
+    }
+    
+    .profile-name {
+        color: black !important;
+        font-size: 14pt !important;
+        margin-bottom: 2pt;
+    }
+    
+    .profile-title {
+        color: #666 !important;
+        font-size: 10pt !important;
+    }
+    
     .resume-content {
         padding: 0 !important;
         background: white !important;
+        margin-left: 0 !important;
     }
     
     /* Sidebar sections for print */
@@ -352,8 +388,35 @@
         font-size: 8pt;
     }
     
-    .skill-tag:not(:last-child):after {
-        content: ', ';
+    /* Skills section for print */
+    .skill-tags .skill-tag {
+        padding: 2pt 0 !important;
+        margin-bottom: 3pt !important;
+        border-bottom: none !important;
+        display: block !important;
+    }
+    
+    .skill-name {
+        display: flex !important;
+        justify-content: space-between;
+        font-size: 8pt !important;
+        margin-bottom: 1pt;
+    }
+    
+    .skill-level {
+        font-size: 7pt !important;
+        color: #666 !important;
+    }
+    
+    .skill-progress {
+        height: 3pt !important;
+        background: #ddd !important;
+        margin-top: 1pt !important;
+    }
+    
+    .skill-progress-bar {
+        background: #333 !important;
+        height: 100% !important;
     }
     
     /* Education styling */
