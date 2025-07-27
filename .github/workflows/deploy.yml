@@ -3,7 +3,6 @@ name: Deploy to GitHub Pages
 on:
   # Trigger on pushes to any branch
   push:
-    branches: [ "**" ]
   
   # Trigger on pull requests to main branch for preview
   pull_request:
