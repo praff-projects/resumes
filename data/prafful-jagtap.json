@@ -1,0 +1,123 @@
+{
+  "id": "prafful-jagtap",
+  "name": "Prafful Jagtap",
+  "title": "Senior Software Engineer | Full‑Stack & Product Engineer",
+  "contact": {
+    "email": "prafful.jagtap@email.com",
+    "phone": "+61-4XX-XXX-XXX",
+    "linkedin": "https://www.linkedin.com/in/prafful-jagtap",
+    "portfolio": "https://github.com/praffuljagtap"
+  },
+  "location": "Sydney, Australia",
+  "profile_summary": "Senior Software Engineer with 4+ years of experience in Australia delivering high‑impact fintech and health‑tech solutions. Specializes in TypeScript, React Native, Node.js, and event‑driven architectures. Experienced in leading features end‑to‑end, mentoring engineers, and shaping product direction with a strong product engineering mindset.",
+  "experience": [
+    {
+      "role": "Senior Software Engineer",
+      "company": "Unloan (Commonwealth Bank of Australia)",
+      "location": "Sydney, NSW",
+      "dates": "Sep 2022 – Present",
+      "responsibilities": [
+        "Lead development of Unloan, CommBank's flagship digital home loan platform.",
+        "Built and maintained cross‑platform apps with React Native, Node.js, TypeScript, and PostgreSQL.",
+        "Owned features end‑to‑end, from architecture and implementation to deployment and support.",
+        "Introduced event‑driven architecture to streamline integrations and improve scalability.",
+        "Mentored junior engineers and contributed to product and technical roadmap discussions."
+      ],
+      "achievements": [
+        "Promoted to lead responsibilities within first year.",
+        "Key contributor to delivery of major platform enhancements ahead of schedule.",
+        "Drove AI‑first initiatives, influencing product features and development workflows."
+      ]
+    },
+    {
+      "role": "Software Developer",
+      "company": "Kinela",
+      "location": "Sydney, NSW",
+      "dates": "Nov 2021 – Jun 2022",
+      "responsibilities": [
+        "Developed a mobile‑friendly web app in Flutter for health‑tech customers.",
+        "Built backend services in Node.js (TypeScript) with PostgreSQL and Hasura GraphQL.",
+        "Configured Firebase Functions to enable serverless action handlers.",
+        "Defined schemas with Prisma for type‑safe database management."
+      ],
+      "achievements": [
+        "Delivered MVP in under 3 months, enabling fast user testing.",
+        "Improved backend structure for scalability and future feature rollout."
+      ]
+    },
+    {
+      "role": "Software Engineer",
+      "company": "Nine Network (Australian Financial Review)",
+      "location": "North Sydney, NSW",
+      "dates": "Feb 2021 – Oct 2021",
+      "responsibilities": [
+        "Developed frontend features for AFR web app using React and TypeScript.",
+        "Supported backend services in GoLang on AWS with microservices architecture.",
+        "Worked with Docker, Kubernetes, and CI/CD pipelines for deployments."
+      ],
+      "achievements": [
+        "Delivered AFR 70th anniversary feature on time, receiving leadership recognition.",
+        "Helped optimize CI/CD pipeline, reducing deployment times by 20%."
+      ]
+    }
+  ],
+  "skills": {
+    "languages_frameworks": [
+      "TypeScript",
+      "JavaScript",
+      "React",
+      "React Native",
+      "Flutter",
+      "Node.js",
+      "GoLang"
+    ],
+    "backend_databases": [
+      "PostgreSQL",
+      "Prisma",
+      "Hasura GraphQL",
+      "Firebase Functions",
+      "AWS (microservices)"
+    ],
+    "devops_tools": [
+      "Docker",
+      "Kubernetes",
+      "CI/CD (GitHub Actions, Bitbucket)",
+      "Agile Scrum"
+    ],
+    "approach": [
+      "End‑to‑end feature ownership",
+      "Event‑driven architecture",
+      "AI-first mindset",
+      "Product engineering"
+    ]
+  },
+  "education": [
+    {
+      "degree": "Master of Computer Science",
+      "specialization": "Machine Learning & Big Data",
+      "institution": "University of Wollongong",
+      "location": "Wollongong, Australia",
+      "year_completed": 2019
+    },
+    {
+      "degree": "Bachelor of Computer Engineering",
+      "institution": "University of Mumbai",
+      "location": "India",
+      "year_completed": 2016
+    }
+  ],
+  "certifications": [
+    {
+      "name": "AWS Certified Developer – Associate",
+      "year_completed": 2023
+    }
+  ],
+  "projects": [
+    {
+      "name": "Pet Management Mobile App (Hobby Project)",
+      "description": "Building an MVP for a mobile app that helps users manage pet health, vaccinations, and training.",
+      "tech_stack": ["React Native", "Supabase", "Prisma", "Expo"]
+    }
+  ],
+  "languages": ["English", "Hindi", "Marathi"]
+}
