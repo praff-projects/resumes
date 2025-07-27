@@ -61,16 +61,6 @@
         padding-bottom: 6pt;
     }
     
-    .profile-photo {
-        width: 30pt !important;
-        height: 30pt !important;
-        font-size: 10pt !important;
-        background: #f0f0f0 !important;
-        color: black !important;
-        border: 0.5pt solid #333 !important;
-        flex-shrink: 0;
-    }
-    
     .profile-name {
         color: black !important;
         font-size: 12pt !important;

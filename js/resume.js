@@ -100,16 +100,10 @@ function updateHeader(resume) {
     if (contentNameEl) contentNameEl.textContent = resume.name;
     if (contentTitleEl) contentTitleEl.textContent = resume.title;
 
-    // Update sidebar profile section with photo placeholder and basic info
-    const profilePhotoEl = document.getElementById('profile-photo');
+    // Update sidebar profile section with basic info
     const profileNameEl = document.getElementById('profile-name');
     const profileTitleEl = document.getElementById('profile-title');
     
-    if (profilePhotoEl) {
-        // Generate initials from full name (e.g., "John Doe" -> "JD")
-        const initials = resume.name.split(' ').map(word => word.charAt(0)).join('');
-        profilePhotoEl.textContent = initials;
-    }
     if (profileNameEl) profileNameEl.textContent = resume.name;
     if (profileTitleEl) profileTitleEl.textContent = resume.title;
 
