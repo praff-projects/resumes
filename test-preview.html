@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Test - Professional Resumes</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 2rem; background: #f0f8ff; }
+        .test-banner { background: #e8f4f8; border: 2px solid #3498db; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        .test-info { color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <div class="test-banner">
+        <h1>🧪 Preview Test Page</h1>
+        <p class="test-info">
+            This is a test page to verify that the multi-branch deployment workflow is working correctly.
+            This page should be accessible at the preview URL for this branch.
+        </p>
+        <p class="test-info">
+            Branch: <code id="branch-name">Loading...</code><br>
+            Timestamp: <code id="timestamp">Loading...</code>
+        </p>
+    </div>
+    
+    <div>
+        <h2>Navigation Test</h2>
+        <ul>
+            <li><a href="index.html">Back to Home</a></li>
+            <li><a href="../">Production Site</a></li>
+            <li><a href="../preview/">Preview Environment</a></li>
+        </ul>
+    </div>
+
+    <script>
+        // Simple client-side info
+        document.getElementById('timestamp').textContent = new Date().toISOString();
+        
+        // Try to detect branch from URL path
+        const path = window.location.pathname;
+        const branchMatch = path.match(/\/preview\/([^\/]+)/);
+        if (branchMatch) {
+            document.getElementById('branch-name').textContent = branchMatch[1];
+        } else {
+            document.getElementById('branch-name').textContent = 'unknown (not in preview path)';
+        }
+    </script>
+</body>
+</html>

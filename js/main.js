@@ -58,5 +58,24 @@ function displayErrorMessage() {
     `;
 }
 
+// Check if we're in a preview environment and show indicator
+function checkPreviewMode() {
+    const path = window.location.pathname;
+    const branchMatch = path.match(/\/preview\/([^\/]+)/);
+    
+    if (branchMatch) {
+        const indicator = document.getElementById('preview-indicator');
+        const branchSpan = document.getElementById('preview-branch');
+        
+        if (indicator && branchSpan) {
+            branchSpan.textContent = branchMatch[1];
+            indicator.style.display = 'block';
+        }
+    }
+}
+
 // Load resume list when page loads
-document.addEventListener('DOMContentLoaded', loadResumeList);
+document.addEventListener('DOMContentLoaded', () => {
+    loadResumeList();
+    checkPreviewMode();
+});
